@@ -6,6 +6,7 @@ import datetime
 import sys
 import time
 import logging
+import os
 
 logger = logging.getLogger("FileLog")
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -37,7 +38,9 @@ def createTex(dest_file,delimiter,file_tex):
                 if row.extend:
                     if 1 < len(row):
                         f.writelines(create_glossary_entry(row[0].title(),row[1]))
+            csvfile.close()
         f.writelines(create_gloss_tex_end())
+        f.close()
 
 def create_glossary_entry(name,description):
     lines = list()
@@ -69,6 +72,7 @@ if pathlib.Path(args.destfile).is_file:
         try:
             logger.info("Обработка файла : " + pathlib.Path(args.destfile).__str__())
             createTex(args.destfile,args.tab,args.texfile)
+          ##  os.system("pdflatex "+args.texfile)
         except OSError as er1:
             logger.error(
                 "Ошибка обработки файла" + pathlib.Path(args.destfile).__str__())
